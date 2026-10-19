@@ -50,6 +50,13 @@ begin
     c.social := least(c.social, greatest(5, c.social - round(h*2)::int));
     if c.hunger < 15 or c.clean < 15 then c.health := least(c.health, greatest(10, c.health - round(h*3)::int));
     else c.health := least(100, c.health + round(h)::int); end if;
+  elsif p_action in ('state','missions','friends') then
+    -- Proses tidur diselesaikan bertahap ketika aplikasi meminta state.
+    -- Timestamp digeser agar progres yang sama tidak dihitung dua kali.
+    h := least(extract(epoch from now() - c.sleep_start) / 3600.0, 8);
+    c.energy := least(100, c.energy + round(h*15)::int);
+    c.hunger := greatest(5, c.hunger - round(h*2)::int);
+    c.sleep_start := now();
   end if;
   c.updated_at := now();
 
