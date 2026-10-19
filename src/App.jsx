@@ -21,20 +21,11 @@ const stats = [['hunger', 'Lapar', 'food', '#e6a35c'], ['energy', 'Energi', 'bol
 const navItems = [['home', 'Rumah', 'home'], ['shop', 'Toko', 'shop'], ['work', 'Karier', 'work'], ['mission', 'Misi', 'quest'], ['room', 'Kamar', 'room'], ['social', 'Sosial', 'social']];
 
 function Character({ c, activity }) {
-  const [label, state] = mood(c); const tired = state === 'sleep' || state === 'warn';
-  return <div className={`character-stage ${activity || ''}`}><div className="scene-orbit" /><div className="character-glow" />
-    <svg className="character" viewBox="0 0 220 300" role="img" aria-label={`Karakter ${c.name}`}>
-      <ellipse cx="110" cy="282" rx="62" ry="10" fill="#17263b" opacity=".16" />
-      <path d="M66 185h88l12 91H54z" fill={c.shirt} /><path d="M66 185h88l-7 24H73z" fill="#fff" opacity=".16" />
-      <path d="M73 269h28v13H67c-5 0-7-7-2-10l8-3Zm47 0h27l10 3c5 3 3 10-2 10h-35z" fill="#263650" />
-      <path d="M61 191 39 238c-2 5 2 10 7 10s8-3 10-8l22-38M159 191l22 47c2 5-2 10-7 10s-8-3-10-8l-22-38" fill={c.shirt} />
-      <circle cx="46" cy="247" r="8" fill={c.skin} /><circle cx="174" cy="247" r="8" fill={c.skin} />
-      <path d="M99 149h22v38H99z" fill={c.skin} /><ellipse cx="110" cy="105" rx="51" ry="57" fill={c.skin} />
-      <path d={c.hair_style === 1 ? 'M59 104Q53 40 110 36q57 4 51 68l-20-31-14 17-18-26-17 26-17-15Z' : c.hair_style === 2 ? 'M58 108V70q9-45 52-38 43-7 52 38v38l-18-29q-25-12-68 0Z' : 'M60 95Q62 38 110 38t50 57q-21-24-50-24T60 95Z'} fill={c.hair} />
-      <path d="M82 108q7 5 14 0M124 108q7 5 14 0" stroke="#24334a" strokeWidth="4" strokeLinecap="round" />
-      <path d={tired ? 'M95 128h30' : 'M94 125q16 13 32 0'} stroke="#24334a" strokeWidth="3" fill="none" strokeLinecap="round" />
-      {c.accessory && <circle cx="110" cy="46" r="9" fill="#e5ad63" />}
-    </svg><div className={`mood-chip ${state}`}><span className="mood-dot" />{label}</div>
+  const [label, state] = mood(c);
+  const pose = activity || 'idle';
+  return <div className={`character-stage ${pose}`}><div className="scene-orbit" /><div className="character-glow" /><div className="character-aura" />
+    <img className="character" src="/assets/character-idle.webp" alt={`Karakter ${c.name}`} /><span className="character-breath" /><span className="character-blink" /><span className="character-hand" />
+    <div className={`mood-chip ${state}`}><span className="mood-dot" />{label}</div>
   </div>;
 }
 function StatGrid({ c }) { return <div className="stat-grid">{stats.map(([key, label, ico, color]) => { const value = Number(c[key] ?? 0); const urgency = value < 25 ? 'critical' : value < 50 ? 'attention' : 'normal'; return <div className={`stat ${urgency}`} key={key}><div className="stat-head"><span><Icon name={ico} size={14} />{label}</span><b>{value}</b></div><div className="stat-track"><i style={{ width: `${value}%`, background: color }} /></div></div>; })}</div>; }
